@@ -1,4 +1,4 @@
-class Reception {
+public class Reception {
     private DateTime _begin;
     private DateTime _end;
     private int _idUser;

@@ -1,4 +1,4 @@
-class AccountRole
+public class AccountRole
 {
     private int _id;
 

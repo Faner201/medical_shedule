@@ -1,4 +1,4 @@
-class Doctor {
+public class Doctor {
     private int _id;
     private string _name;
     private Specialization _specialization;

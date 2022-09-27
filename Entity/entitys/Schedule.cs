@@ -1,4 +1,4 @@
-class Schedule {
+public class Schedule {
     private int _idDoctor;
     private DateTime _start;
     private DateTime _end;

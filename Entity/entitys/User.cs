@@ -1,4 +1,4 @@
-class User {
+public class User {
     private int _id;
     private int _phoneNumber;
     private string _name;

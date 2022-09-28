@@ -1,13 +1,29 @@
+<<<<<<< HEAD
 project.lock.json
 .DS_Store
 
 
+=======
+.DS_Store
+
+>>>>>>> d9089cdd4456ec5cec5bb2d586e8e4ea2afa24ad
 .vscode
 
 .idea
 
+<<<<<<< HEAD
+=======
+*.user
+>>>>>>> d9089cdd4456ec5cec5bb2d586e8e4ea2afa24ad
 
 [Dd]ebug/
 [Dd]ebugPublic/
 [Bb]in/
+<<<<<<< HEAD
 [Oo]bj/
+=======
+[Oo]bj/
+[Oo]ut/
+
+project.nuget.cache
+>>>>>>> d9089cdd4456ec5cec5bb2d586e8e4ea2afa24ad

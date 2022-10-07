@@ -1,6 +1,6 @@
-interface IUserRepository : IRepository<User>
+public interface IUserRepository : IRepository<User>
 {
-    bool UserCheck(string login, string password);
+    bool UserCheck(string login);
 
     User GetUserByLogin(string login);
 

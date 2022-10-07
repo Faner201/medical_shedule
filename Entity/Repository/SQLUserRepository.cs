@@ -40,7 +40,7 @@ public class SQLUserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public bool UserCheck(string login, string password)
+    public bool UserCheck(string login)
     {
         throw new NotImplementedException();
     }

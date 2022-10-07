@@ -2,12 +2,12 @@ public class Result
 {
     public bool Success { get; }
     public string Error { get; private set; }
-    public bool IsFailure => !Success;
+    public bool IsFail { get => !Success; }
 
     protected Result(bool success, string error)
     {
-        this.Success = success;
-        this.Error = error;
+        Success = success;
+        Error = error;
     }
 
     public static Result Fail(string message)

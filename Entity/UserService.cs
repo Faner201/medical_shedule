@@ -1,6 +1,6 @@
 public class UserService 
 {
-    private  IUserRepository _db = new SQLUserRepository();
+    private  IUserRepository _db;
 
     public UserService(IUserRepository db)
     {

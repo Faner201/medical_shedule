@@ -12,7 +12,7 @@ using Xunit;
         }
 
         [Fact]
-        public void CreateNewUserWithEmptyLogin_ShoudFail()
+        public void CreateNewUserWithEmptyLogin_ShouldFail()
         {
             string login = string.Empty;
             string password = string.Empty;

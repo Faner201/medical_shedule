@@ -6,12 +6,12 @@ public class User
     private AccountRole _role;
     private string _password;
     private string _login;
-    public int Id { get => _id; set => _id = value; }
-    public AccountRole Role { get => _role; set => _role = value; }
-    public string Name { get => _name; set => _name = value; }
-    public string PhoneNumber { get => _phoneNumber; set => _phoneNumber = value; }
-    public string Password { get => _password; set => _password = value; }
-    public string Login { get => _login; set => _login = value; }
+    public int Id { get; set; }
+    public AccountRole Role { get; set; }
+    public string Name { get; set; }
+    public string PhoneNumber { get; set; }
+    public string Password { get; set; }
+    public string Login { get; set; }
 
     public User(int id, string phoneNumber, string name, 
     AccountRole role, string password, string login)

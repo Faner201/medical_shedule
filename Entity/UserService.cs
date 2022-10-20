@@ -6,29 +6,20 @@ public class UserService
     {
         _db = db;
     }
-    public  Result<User> CreateNewUser(string login, string password)
+    public  Result<User> CreateNewUser(User user)
     {
-        if(string.IsNullOrEmpty(login))
+        if(string.IsNullOrEmpty(user.Login))
             return Result.Fail<User>("Login reading error");
 
-        if(string.IsNullOrEmpty(password))
+        if(string.IsNullOrEmpty(user.Password))
             return Result.Fail<User>("Password reading error");
 
-        if(_db.GetUserByLogin(login) is not null)
+        if(_db.GetUserByLogin(user.Login) is not null)
             return Result.Fail<User>("This login is already occupied");
 
-        User user = new User(
-            id: default,
-            phoneNumber: "",
-            name: "",
-            role: new AccountRole(0),
-            password: password,
-            login: login
-        );
+        var isCreate = _db.CreateNewUser(user);
 
-        bool isCreate = _db.CreateNewUser(login, password);
-
-        return isCreate ? Result.Ok<User>(user) : Result.Fail<User>("User not created");
+        return isCreate is not null ? Result.Ok<User>(user) : Result.Fail<User>("User not created");
     }
 
     public  Result<bool> UserCheck(string login)

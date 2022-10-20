@@ -14,10 +14,14 @@ using Xunit;
         [Fact]
         public void CreateNewUserWithEmptyLogin_ShouldFail()
         {
-            string login = string.Empty;
-            string password = string.Empty;
+            int id = 5;
+            string phoneNumber = "3-435-343-43-22";
+            string Name = "Faner201";
+            string password = "gigachad password";
 
-            var res = _userService.CreateNewUser(login, password);
+            User user = new User(id, phoneNumber, Name, new AccountRole(0), password, string.Empty);
+
+            var res = _userService.CreateNewUser(user);
             var received = res.Error;
 
             Assert.True(res.IsFail);
@@ -27,10 +31,14 @@ using Xunit;
         [Fact]
         public void CreateNewUserWithEmptyPassword_ShouldFail()
         {
+            int id = 5;
+            string phoneNumber = "3-435-343-43-22";
+            string Name = "Faner201";
             string login = "faner201";
-            string password = string.Empty;
 
-            var res = _userService.CreateNewUser(login, password);
+            User user = new User(id, phoneNumber, Name, new AccountRole(0), string.Empty, login);
+
+            var res = _userService.CreateNewUser(user);
             var received = res.Error;
 
             Assert.True(res.IsFail);
@@ -40,13 +48,18 @@ using Xunit;
         [Fact]
         public void CreateNewUserWithOccupiedLogin_ShouldFail()
         {
+            int id = 5;
+            string phoneNumber = "3-435-343-43-22";
+            string Name = "Faner201";
+            string login = "faner201";
+            string password = "gigachad password";
+
+            User user = new User(id, phoneNumber, Name, new AccountRole(0), password, login);
+            
             _userRepositoryMock.Setup(repository => repository.GetUserByLogin(It.IsAny<string>()))
                 .Returns(() => new User(1, "", "", new AccountRole(0), "", ""));
-
-            string login = "faner201";
-            string password = "password";
             
-            var res = _userService.CreateNewUser(login, password);
+            var res = _userService.CreateNewUser(user);
             var received = res.Error;
 
             Assert.True(res.IsFail);
@@ -56,13 +69,21 @@ using Xunit;
         [Fact]
         public void CreateNewUserSuccessfully_ShouldOk()
         {
-            _userRepositoryMock.Setup(repository => repository.CreateNewUser(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(() => true);
-
+            int id = 5;
+            string phoneNumber = "3-435-343-43-22";
+            string Name = "Faner201";
             string login = "faner201";
-            string password = "password";
+            string password = "gigachad password";
 
-            var res = _userService.CreateNewUser(login, password);
+            User user = new User(id, phoneNumber, Name, new AccountRole(0), password, login);
+
+            _userRepositoryMock.Setup(repository => repository.GetUserByLogin(It.IsAny<string>()))
+                .Returns(() => null);
+
+            _userRepositoryMock.Setup(repository => repository.CreateNewUser(It.IsAny<User>()))
+                .Returns(() => new User(8, phoneNumber, Name, new AccountRole(0), password, login));
+
+            var res = _userService.CreateNewUser(user);
             var received = res.Error;
 
             Assert.True(res.Success);
@@ -74,18 +95,24 @@ using Xunit;
         [Fact]
         public void CreateNewUserAnotherErorr_ShouldFail()
         {
-            _userRepositoryMock.Setup(repository => repository.CreateNewUser(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(() => false);
-
+            int id = 5;
+            string phoneNumber = "3-435-343-43-22";
+            string name = "Faner201";
             string login = "faner201";
-            string password = "password";
+            string password = "gigachad password";
 
-            var res = _userService.CreateNewUser(login, password);
+            User user = new User(id, phoneNumber, name, new AccountRole(0), password, login);
+
+            _userRepositoryMock.Setup(repository => repository.GetUserByLogin(It.IsAny<string>()))
+                .Returns(() => null);
+            _userRepositoryMock.Setup(repository => repository.CreateNewUser(It.IsAny<User>()))
+                .Returns(() => null);
+
+            var res = _userService.CreateNewUser(user);
             var received = res.Error;
             
             Assert.True(res.IsFail);
             Assert.Equal("User not created", received);
-            Assert.Equal(null, res.Value);
         }
 
         [Fact]

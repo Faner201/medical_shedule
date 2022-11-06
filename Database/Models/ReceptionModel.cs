@@ -1,9 +1,9 @@
-namespace Entity;
-public class Reception {
-    private DateTime _begin;
-    private DateTime _end;
-    private int _idUser;
-    private int _idDoctor;
+using System.ComponentModel.DataAnnotations;
+namespace Database;
+
+public class ReceptionModel
+{
+    [Required]
     public DateTime Begin { get; set; }
     public DateTime End { get; set; }
     public int IdUser { get; }

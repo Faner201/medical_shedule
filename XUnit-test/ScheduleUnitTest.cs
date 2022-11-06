@@ -1,5 +1,7 @@
 using Xunit;
+using Entity;
 
+namespace XUnit;
 public class ScheduleUnitTest
 {
     private readonly ScheduleService _scheduleService;

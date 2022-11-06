@@ -1,5 +1,7 @@
 using Xunit;
+using Entity;
 
+namespace XUnit;
 public class ReceptionUnitTest
 {
     private readonly ReceptionService _receptionService;

@@ -1,3 +1,4 @@
+namespace Entity;
 public interface IReceptionRepository : IRepository<Reception>
 {
     Reception? SaveDoctorAppointment(DateTime date, int doctorID);

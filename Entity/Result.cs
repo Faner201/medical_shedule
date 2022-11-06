@@ -1,3 +1,4 @@
+namespace Entity;
 public class Result
 {
     public bool Success { get; }

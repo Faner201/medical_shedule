@@ -1,3 +1,4 @@
+namespace Entity;
 public interface IScheduleRepository : IRepository<Schedule>
 {
     Schedule? GetDoctorScheduleByDate(int doctorID, DateTime date);

@@ -1,8 +1,9 @@
-namespace Entity;
-public class Schedule {
-    private int _idDoctor;
-    private DateTime _start;
-    private DateTime _end;
+using System.ComponentModel.DataAnnotations;
+namespace Database;
+
+public class ScheduleModels
+{
+    [Required]
     public int IdDoctor { get; set; }
     public DateTime Start { get; set; }
     public DateTime End { get; set; }

@@ -10,11 +10,11 @@ public class ApplicationContext : DbContext
 
     public DbSet<DoctorModel> Doctor { get; set; }
 
-    public DbSet<Reception> Reception { get; set; }
+    public DbSet<ReceptionModel> Reception { get; set; }
 
-    public DbSet<Specialization> Specialization { get; set; }
+    public DbSet<SpecializationModel> Specialization { get; set; }
 
-    public DbSet<Schedule> Schedule {get; set; }
+    public DbSet<ScheduleModel> Schedule {get; set; }
 
     public DbSet<AccountRoleModel> AccountRole {get; set; }
 

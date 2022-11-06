@@ -5,7 +5,7 @@ public class AccountRoleModel
 {
     private int _id;
     [Required]
-    public AccountRole(int id)
+    public AccountRoleModel(int id)
     {
         _id = id;
     }

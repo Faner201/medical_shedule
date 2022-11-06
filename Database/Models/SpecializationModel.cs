@@ -7,7 +7,7 @@ public class SpecializationModel
     [Required]
     public string Name { get; set; }
 
-    public Specialization(string name)
+    public SpecializationModel(string name)
     {
         Name = name;
     }

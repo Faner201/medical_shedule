@@ -8,7 +8,7 @@ public class ReceptionModel
     public DateTime End { get; set; }
     public int IdUser { get; }
     public int IdDoctor { get; }
-    public Reception(DateTime begin, DateTime end, int idUser, int idDoctor)
+    public ReceptionModel(DateTime begin, DateTime end, int idUser, int idDoctor)
     {
         Begin = begin;
         End = end;

@@ -1,14 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 namespace Database;
 
-public class ScheduleModels
+public class ScheduleModel
 {
     [Required]
     public int IdDoctor { get; set; }
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
 
-    public Schedule(int idDoctor, DateTime start, DateTime end)
+    public ScheduleModel(int idDoctor, DateTime start, DateTime end)
     {
         IdDoctor = idDoctor;
         Start = start;

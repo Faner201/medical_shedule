@@ -1,0 +1,6 @@
+{
+    "ConnectionStrings": {
+      "DefaultConnection": "Host=localhost;Port=5432;Database=medical_base;Username=postgres;Password=Bkmz2309865"
+    }
+  }
+  

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Database;
 
@@ -16,8 +18,21 @@ public class ApplicationContext : DbContext
 
     public DbSet<AccountRoleModel> AccountRole {get; set; }
 
+    private string ConfigurationJSON()
+    {
+        var builder = new ConfigurationBuilder();
+        builder.SetBasePath(Directory.GetCurrentDirectory());
+        builder.AddJsonFile("appsetings.json");
+
+        var config = builder.Build();
+
+        string connectionString = config.GetConnectionString("DefaultConnection");
+        
+        return connectionString;
+    } 
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=medical_base;Username=postgres;Password=Bkmz2309865");
+        optionsBuilder.UseNpgsql(ConfigurationJSON()).Options;
     }
 }

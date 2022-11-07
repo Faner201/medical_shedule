@@ -3,8 +3,7 @@ namespace Database;
 
 public class AccountRoleModel
 {
-    public int Id{ get; set; }
+    public int Id { get; set; }
     [Required]
-    public int AccountRoleId{get; set; }
-
+    public int AccountRoleId { get; set; }
 }

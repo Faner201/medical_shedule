@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Entity;
-
 namespace Database;
 
 public class ApplicationContext : DbContext
@@ -18,13 +16,8 @@ public class ApplicationContext : DbContext
 
     public DbSet<AccountRoleModel> AccountRole {get; set; }
 
-    public ApplicationContext() 
-    {
-        Database.EnsureCreated();
-    }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
-        optionsBuilder.UseSqlServer("Host=localhost;Port=5432;Database=medical_base;Username=postgres;Password=");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=medical_base;Username=postgres;Password=Bkmz2309865");
     }
 }

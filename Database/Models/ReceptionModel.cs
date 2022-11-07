@@ -3,9 +3,10 @@ namespace Database;
 
 public class ReceptionModel
 {
+    public int Id { get; set; }
     [Required]
     public DateTime Begin { get; set; }
     public DateTime End { get; set; }
-    public int IdUser { get; }
-    public int IdDoctor { get; }
+    public UserModel IdUser { get; set; }
+    public DoctorModel IdDoctor { get; set; }
 }

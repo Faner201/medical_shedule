@@ -11,18 +11,33 @@ public class DoctorModelService : IDoctorRepository
         _db = db;
     }
 
-    public Doctor CreateNewDoctor(Doctor doctor)
+    public Doctor? CreateNewDoctor(Doctor doctor)
     {
-        _db.Doctor.Add(new DoctorModel {
-            Name = doctor.Name,
-            Specialization = doctor.Specialization
-        });
+        var doctor = _db.Doctor.FirstOrDefault(d => d.Name == doctor.Name && d.Specialization == doctor.Specialization);
+
+        if (doctor is null)
+            return null;
+
+        _db.Doctor.Add(new DoctorModel 
+            {
+                Name = doctor.Name,
+                Specialization = doctor.Specialization
+            }
+        );
+
         _db.SaveChanges();
+
+        return new Doctor(
+            doctor.Id,
+            doctor.Name,
+            doctor.Specialization
+        );
     }
 
     public bool DeleteDoctor(int DoctorID)
     {
         var request = _db.Doctor.FirstOrDefault(u => u.Id == DoctorID);
+
         if (request != null)
         {
             _db.Doctor.Remove(request);
@@ -32,35 +47,62 @@ public class DoctorModelService : IDoctorRepository
         return false;
     }
 
-    public List<Doctor> GetDoctorList()
+    public List<Doctor>? GetDoctorList()
     {
-        var request = from r in DoctorModel select r;
+        var doctors = from d in Doctor select d;
 
-        return new List<Doctor>(new Doctor {
-            Id = request.Id, Name = request.Name, 
-            Specialization = request.Specialization
-        });
+        if (doctors.Count == 0)
+            return new List<Doctor>();
+
+        var doctorsList = doctors.Select(
+            d => new Doctor{
+                Id = d.Id,
+                Name = d.Name,
+                Specialization = d.Specialization
+            }
+        ).ToList();
+
+        return new List<Doctor>(
+            doctorsList.Id,
+            doctorsList.Name,
+            doctorsList.Specialization
+        );
     }
 
-    public Doctor GetDoctor(int doctorID)
+    public Doctor? GetDoctor(int doctorID)
     {
-        var request = _db.Doctor.FirstOrDefault(u => u.Id == doctorID);
+        var doctor = _db.Doctor.FirstOrDefault(d => d.Id == doctorID);
+
+        if (doctor is null)
+            return null;
 
         return new Doctor{
-            Id = request.Id,
-            Name = request.Name,
-            Specialization = request.Specialization
+            doctor.Id,
+            doctor.Name,
+            doctor.Specialization
         };
     }
 
     public List<Doctor> GetDoctors(Specialization specialization)
     {
-        var request = _db.Doctor.FirstOrDefault(u => u.Specialization == specialization);
+        var doctors = _db.Doctor.Where(d => d.Specialization == specialization).ToList();
 
-        return new List<Doctor>(new Doctor {
-            Id = request.Id,
-            Name = request.Name,
-            Specialization = request.Specialization
-        });
+        if (doctors.Count == 0)
+            return new List<Doctor>();
+
+
+        var doctorsList = doctors.Select(
+            d => new Doctor{
+                Id = d.Id,
+                Name = d.Name,
+                Specialization = d.Specialization
+            }
+        ).ToList();
+
+        return new List<Doctor>(
+            doctorsList.Id,
+            doctorsList.Name,
+            doctorsList.Specialization
+        );
     }
 }

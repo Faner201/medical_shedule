@@ -1,7 +1,8 @@
 namespace Entity;
 public interface IScheduleRepository : IRepository<Schedule>
 {
-    Schedule? GetDoctorScheduleByDate(int doctorID, DateTime date);
-    Schedule? AddScheduleDoctor(Schedule schedule);
-    Schedule? EditScheduleDoctor(Schedule schedule);
+   Schedule? RecordCreation(Schedule schedule);
+   bool RecordExists(Schedule schedule);
+
+   List<(DateTime, DateTime)> GetAllDates(Specialization specialization, DateOnly date);
 }

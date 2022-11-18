@@ -11,38 +11,59 @@ public class UserModelService : IUserRepository
         _db = db;
     }
     
-    public User CreateNewUser(User user)
+    public User? CreateNewUser(User user)
     {
-        _db.User.Add(new UserModel{
-            PhoneNumber = user.PhoneNumber,
-            Name = user.Name,
-            Role = user.Role,
-            Password = user.Password,
-            Login = user.Login
-        });
+        var user = _db.User.FirstOrDefault(u => u.Login == user.Login);
+
+        if (user is not null)
+            return null;
+
+        _db.User.Add(
+            new UserModel{
+                PhoneNumber = user.PhoneNumber,
+                Name = user.Name,
+                Role = user.Role,
+                Password = user.Password,
+                Login = user.Login
+            }
+        );
+
         _db.SaveChanges();
+
+        return new User(
+            user.Id,
+            user.PhoneNumber,
+            user.Name,
+            user.Role,
+            user.Password,
+            user.Login
+        );
     }
 
     public bool UserCheck(string login) 
     {
-        if (_db.User.FirstOrDefault(u => u.Login == login))
-        {
+        var user = _db.User.FirstOrDefault(u => u.Login == login);
+
+        if (user is null)
             return true;
-        }
-        return false;
+        else
+            return false;
     }
 
-    public User GetUserByLogin(string login)
+    public User? GetUserByLogin(string login)
     {
-        var request = _db.User.FirstOrDefault(u => u.Login == login);
+        var user = _db.User.FirstOrDefault(u => u.Login == login);
 
-        return new User{
-            Id = request.Id,
-            PhoneNumber = request.PhoneNumber,
-            Name = request.Name,
-            Role = request.Role,
-            Password = request.Password,
-            login = request.Login
-        };
+        if (user is null)
+            return null;
+
+        return new User(
+            user.Id,
+            user.PhoneNumber,
+            user.Name,
+            user.Role,
+            user.Password,
+            user.Login
+        );
     }
 }

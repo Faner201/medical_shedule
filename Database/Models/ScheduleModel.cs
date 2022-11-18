@@ -8,4 +8,5 @@ public class ScheduleModel
     public DoctorModel IdDoctor { get; set; }
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
+    public DateOnly Date { get; set; }
 }

@@ -11,35 +11,65 @@ public class ScheduleModelService : IScheduleRepository
         _db = db;
     }
 
-    public Schedule GetDoctorScheduleByDate(int doctorID, DateTime date)
+    public Schedule? GetDoctorScheduleByDate(int doctorID, DateOnly date)
     {
-        var request = _db.Schedule.Where(u => u.IdDoctor == doctorID && u.Start = date);
+        var schedule = _db.Schedule.Where(s => s.IdDoctor == doctorID && s.Date == date);
 
-        return new Schedule{
-            IdDoctor = request.IdDoctor,
-            Start = request.Start,
-            End = request.End
-        };
+        if (schedule is null)
+            return null;
+
+        return new Schedule(
+            schedule.IdDoctor,
+            schedule.Start,
+            schedule.End,
+            schedule.Date
+        );
     }
 
-    public Schedule AddScheduleDoctor(Schedule schedule)
+    public Schedule? AddScheduleDoctor(Schedule schedule)
     {
-        _db.Schedule.Add(new ScheduleModel{
-            IdDoctor = schedule.IdDoctor,
-            Start = schedule.Start,
-            End = schedule.End
-        });
+        var schedules = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor);
+
+        if (schedules is not null)
+            return null;
+
+        _db.Schedule.Add(new ScheduleModel
+            {
+                IdDoctor = schedule.IdDoctor,
+                Start = schedule.Start,
+                End = schedule.End
+            }
+        );
         _db.SaveChanges();
+
+        return new Schedule(
+            schedules.IdDoctor,
+            schedules.Start,
+            schedules.End,
+            schedules.Date
+        );
     }
 
-    public Schedule EditScheduleDoctor(Schedule schedule)
+    public Schedule? EditScheduleDoctor(Schedule schedule)
     {
-        var request = _db.Schedule.FirstOrDefault(u => u.IdDoctor == schedule.IdDoctor);
-        if(request)
+        var schedules = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor &&
+        s.Date == schedule.Date && s.Start == schedule.Start && s.End == schedule.End);
+        if (schedule is not null)
         {
-            request.Start = schedule.Start;
-            request.End = schedule.End;
-            _db.Schedule.Update(request);
+            schedules.Start = schedule.Start;
+            schedules.End = schedule.End;
+            schedules.Date = schedule.Date;
+            _db.Schedule.Update(schedule);
+            _db.SaveChanges();
+        } else {
+            return null;
         }
+
+        return new Schedule(
+            schedules.IdDoctor,
+            schedules.Start,
+            schedules.End,
+            schedules.Date
+        );
     }
 }

@@ -13,9 +13,9 @@ public class UserModelService : IUserRepository
     
     public User? CreateNewUser(User user)
     {
-        var user = _db.User.FirstOrDefault(u => u.Login == user.Login);
+        var request = _db.User.FirstOrDefault(u => u.Login == user.Login);
 
-        if (user is not null)
+        if (request is not null)
             return null;
 
         _db.User.Add(
@@ -31,12 +31,12 @@ public class UserModelService : IUserRepository
         _db.SaveChanges();
 
         return new User(
-            user.Id,
-            user.PhoneNumber,
-            user.Name,
-            user.Role,
-            user.Password,
-            user.Login
+            request.Id,
+            request.PhoneNumber,
+            request.Name,
+            request.Role,
+            request.Password,
+            request.Login
         );
     }
 

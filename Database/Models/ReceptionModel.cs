@@ -9,5 +9,4 @@ public class ReceptionModel
     public DateTime End { get; set; }
     public UserModel IdUser { get; set; }
     public DoctorModel IdDoctor { get; set; }
-    public  int Employment { get; set; }
 }

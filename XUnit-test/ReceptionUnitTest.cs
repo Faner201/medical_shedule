@@ -14,125 +14,185 @@ public class ReceptionUnitTest
     }
 
     [Fact]
-    public void SaveDoctorAppointmentWithEmptyNotFound_ShouldFail()
+    public void RecordCreationEmptySpecialization_ShouldFail()
     {
-        int doctorID = 3242;
-        int userID = 5235;
+        int userId = 5;
+        int doctorId = 10;
         DateTime date = new DateTime(1, 1, 1);
+        Specialization specialization = new Specialization(5, string.Empty);
 
-        var reception = new Reception(date, date, userID, doctorID);
+        var record = new Reception(doctorId, userId, date, date, specialization);
 
-        _receptionRepositoryMock.Setup(repository => repository.SaveDoctorAppointment(reception))
-            .Returns(() => null);
-        
-        var res = _receptionService.SaveDoctorAppointment(reception);
+        var res = _receptionService.RecordCreation(record);
         var received = res.Error;
 
         Assert.True(res.IsFail);
-        Assert.Equal("Sorry, this entry is already taken", received);
+        Assert.Equal("There is no specialization", received);
     }
 
     [Fact]
-    public void SaveDoctorAppointmentSuccessfully_ShouldOk()
+    public void RecordCreationRecordExists_ShouldFail()
     {
-        int doctorID = 3242;
-        int userID = 5235;
+        int userId = 5;
+        int doctorId = 10;
         DateTime date = new DateTime(1, 1, 1);
+        Specialization specialization = new Specialization(5, "Gigi");
 
-        var reception = new Reception(date, date, userID, doctorID);
+        var record = new Reception(doctorId, userId, date, date, specialization);
 
-        _receptionRepositoryMock.Setup(repository => repository.SaveDoctorAppointment(reception))
-            .Returns(() => new Reception(date, date, default, default));
-        
-        var res = _receptionService.SaveDoctorAppointment(reception);
+        _receptionRepositoryMock.Setup(repository => repository.RecordExists(record))
+            .Returns(() => true);
+
+        var res = _receptionService.RecordCreation(record);
         var received = res.Error;
+
+        Assert.True(res.IsFail);
+        Assert.Equal("There is already an appointment with this doctor for the selected date", received);
+    }
+
+    [Fact]
+    public void RecordCreationOk_ShouldOk()
+    {
+        int userId = 5;
+        int doctorId = 10;
+        DateTime date = new DateTime(1, 1, 1);
+        Specialization specialization = new Specialization(5, "Gigi");
+
+        var record = new Reception(doctorId, userId, date, date, specialization);
+
+        _receptionRepositoryMock.Setup(repository => repository.RecordExists(record))
+            .Returns(() => false);
+
+        _receptionRepositoryMock.Setup(repository => repository.RecordCreation(record))
+            .Returns(() => new Reception(doctorId, userId, date, date, specialization));
+
+        var res = _receptionService.RecordCreation(record);
 
         Assert.True(res.Success);
-        Assert.Equal(string.Empty, received);
+        Assert.Equal(string.Empty, res.Error);
     }
 
     [Fact]
-    public void SaveAnyFreeDoctorAppointmentWithNotFound_ShouldFail()
+    public void RecordCreationOtherError_ShouldFail()
     {
-        int doctorID = 3242;
-        int userID = 5235;
+        int userId = 5;
+        int doctorId = 10;
         DateTime date = new DateTime(1, 1, 1);
+        Specialization specialization = new Specialization(5, "Gigi");
 
-        var reception = new Reception(date, date, userID, doctorID);
+        var record = new Reception(doctorId, userId, date, date, specialization);
 
-        _receptionRepositoryMock.Setup(repository => repository.SaveAnyFreeDoctorAppointment(reception))
+        _receptionRepositoryMock.Setup(repository => repository.RecordExists(record))
+            .Returns(() => false);
+
+        _receptionRepositoryMock.Setup(repository => repository.RecordCreation(record))
             .Returns(() => null);
-        
-        var res = _receptionService.SaveAnyFreeDoctorAppointment(reception);
+
+        var res = _receptionService.RecordCreation(record);
         var received = res.Error;
 
         Assert.True(res.IsFail);
-        Assert.Equal("I'm sorry, I couldn't get an appointment", received);
+        Assert.Equal("Failed to create appointment", received);
     }
 
     [Fact]
-    public void SaveAnyFreeDoctorAppointment_ShouldOk()
+    public void GetAllFreeDatesEmptySpecialization_ShouldFail()
     {
-        int doctorID = 3242;
-        int userID = 5235;
-        DateTime date = new DateTime(1, 1, 1);
+        int specializationId = 4;
+        DateOnly date = new DateOnly(2022, 11, 19);
 
-        var reception = new Reception(date, date, userID, doctorID);
+        Specialization specialization = new Specialization(specializationId, string.Empty);
 
-        _receptionRepositoryMock.Setup(repository => repository.SaveAnyFreeDoctorAppointment(reception))
-            .Returns(() => new Reception(date, date, default, default));
-        
-        var res = _receptionService.SaveAnyFreeDoctorAppointment(reception);
+        var res = _receptionService.GetAllFreeDates(specialization, date);
         var received = res.Error;
+
+        Assert.True(res.IsFail);
+        Assert.Equal("There is no specialization", received);
+    }
+
+    [Fact]
+    public void GetAllFreeDatesWithEmptyReception_ShouldOk()
+    {
+        int specializationId = 4;
+        DateOnly date = new DateOnly(2022, 11, 19);
+
+        Specialization specialization = new Specialization(specializationId, "One");
+        
+        DateTime start = date.ToDateTime(new TimeOnly(0, 0, 0));
+        DateTime end = date.ToDateTime(new TimeOnly(23, 59, 59));
+
+        var allFreeDates = new List<(DateTime, DateTime)>{(start, end)};
+
+        _receptionRepositoryMock.Setup(repository => repository.GetAllDates(specialization, date))
+            .Returns(() => new List<(DateTime, DateTime)>());
+
+        var res = _receptionService.GetAllFreeDates(specialization, date);
 
         Assert.True(res.Success);
-        Assert.Equal(string.Empty, received);
-    }
-    [Fact]
-    public void GetFreeAppointmentDateListEmptySpecialization_ShouldFail()
-    {
-        Specialization specialization = new Specialization(default, "");
-        DateOnly date = new DateOnly(234,532,623);
-
-        var res = _receptionService.GetFreeAppointmentDateList(specialization, date);
-        var received = res.Error;
-
-        Assert.True(res.IsFail);
-        Assert.Equal("This specialty was not found", received);
+        Assert.Equal(string.Empty, res.Error);
+        Assert.Equal(allFreeDates, res.Value);
     }
 
     [Fact]
-    public void GetFreeAppointmentDateListWithEmptyNotFound_ShouldFail()
-    {
-        Specialization specialization = new Specialization(default, "");
-        DateOnly date = new DateOnly(234,532,623);
 
-        _receptionRepositoryMock.Setup(repository => repository.GetFreeAppointmentDateList(specialization, date))
-            .Returns(() => null);
+    public void GetAllFreeDatesWithOneReception_ShouldOk()
+    {
+        int specializationId = 4;
+        DateOnly date = new DateOnly(2022, 11, 19);
+
+        Specialization specialization = new Specialization(specializationId, "One");
         
-        var res = _receptionService.GetFreeAppointmentDateList(specialization, date);
-        var received = res.Error;
+        DateTime start = date.ToDateTime(new TimeOnly(0, 0, 0));
+        DateTime end = date.ToDateTime(new TimeOnly(23, 59, 59));
 
-        Assert.True(res.IsFail);
-        Assert.Equal("There are no entries as of this date", received);
-    }
+        var allFreeDates = new List<(DateTime, DateTime)>
+            {
+                (start, start.AddHours(18).AddMinutes(32)),
+                (start.AddHours(20).AddMinutes(30), end)
+            };
 
-    [Fact]
-    public void GetFreeAppointmentDateList()
-    {
-        Specialization specialization = new Specialization(default, "Дифференциальный осмотр");
-        DateOnly date = new DateOnly(234,532,623);
-        var start = date.ToDateTime(new TimeOnly(0, 0, 0));
-        var end = date.ToDateTime(new TimeOnly(23, 59, 59));
-        var listDates = new List<(DateTime, DateTime)>{(start, end)};
+        _receptionRepositoryMock.Setup(repository => repository.GetAllDates(specialization, date))
+            .Returns(() => new List<(DateTime, DateTime)>
+                {
+                    (start.AddHours(18).AddMinutes(32), start.AddHours(20).AddMinutes(30))
+                });
 
-        _receptionRepositoryMock.Setup(repository => repository.GetFreeAppointmentDateList(specialization,date))
-            .Returns(() => new List<(DateTime,DateTime)>());
-
-        var res = _receptionService.GetFreeAppointmentDateList(specialization,date);
-        var received = res.Error;
+        var res = _receptionService.GetAllFreeDates(specialization, date);
 
         Assert.True(res.Success);
-        Assert.Equal(string.Empty, received);
+        Assert.Equal(string.Empty, res.Error);
+        Assert.Equal(allFreeDates, res.Value);
+
+    }
+
+    [Fact]
+    public void GetAllFreeDatesWithMoryReception_ShouldOk()
+    {
+        int specializationId = 4;
+        DateOnly date = new DateOnly(2022, 11, 19);
+
+        Specialization specialization = new Specialization(specializationId, "One");
+        
+        DateTime start = date.ToDateTime(new TimeOnly(0, 0, 0));
+        DateTime end = date.ToDateTime(new TimeOnly(23, 59, 59));
+
+        var allFreeDates = new List<(DateTime, DateTime)>
+            {
+                (start, start.AddHours(8).AddMinutes(30)),
+                (start.AddHours(10).AddMinutes(30), start.AddHours(12).AddMinutes(50))
+            };
+
+        _receptionRepositoryMock.Setup(repository => repository.GetAllDates(specialization, date))
+            .Returns(() => new List<(DateTime, DateTime)>
+                {
+                    (start.AddHours(8).AddMinutes(30), start.AddHours(10).AddMinutes(30)),
+                    (start.AddHours(12).AddMinutes(50), start.AddHours(23).AddMinutes(59).AddSeconds(59))
+                });
+
+        var res = _receptionService.GetAllFreeDates(specialization, date);
+
+        Assert.True(res.Success);
+        Assert.Equal(string.Empty, res.Error);
+        Assert.Equal(allFreeDates, res.Value);
     }
 }

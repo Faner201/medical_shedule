@@ -1,7 +1,6 @@
 using Xunit;
 using Entity;
 
-namespace XUnit;
 public class ScheduleUnitTest
 {
     private readonly ScheduleService _scheduleService;
@@ -17,7 +16,7 @@ public class ScheduleUnitTest
     public void GetDoctorScheduleByDateWithEmptyNotFound_ShouldFail()
     {
         int doctorID = 4324;
-        var date = new DateOnly(1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1);
 
         _scheduleRepositoryMock.Setup(repository => repository.GetDoctorScheduleByDate(doctorID, date))
             .Returns(() => null);
@@ -33,10 +32,10 @@ public class ScheduleUnitTest
     public void GetDoctorScheduleByDateSuccessfully_ShouldOk()
     {
         int doctorID = 4234;
-        var date = new DateOnly(1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1);
 
         _scheduleRepositoryMock.Setup(repository => repository.GetDoctorScheduleByDate(doctorID, date))
-            .Returns(() => new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date));
+            .Returns(() => new Schedule(default, date, date));
 
         var res = _scheduleService.GetDoctorScheduleByDate(doctorID, date);
         var received = res.Error;
@@ -48,8 +47,8 @@ public class ScheduleUnitTest
     [Fact]
     public void AddScheduleDoctorWithEmptyNotFound_ShouldFail()
     {
-        var date = new DateOnly(1, 1, 1);
-        Schedule schedule = new Schedule(default,  new DateTime(1, 1, 1), new DateTime(1, 1, 1), date);
+        DateTime date = new DateTime(1, 1, 1);
+        Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.AddScheduleDoctor(schedule))
             .Returns(() => null);
@@ -64,11 +63,11 @@ public class ScheduleUnitTest
     [Fact]
     public void AddScheduleDoctorSuccessfully_ShouldOk()
     {
-        var date = new DateOnly(1, 1, 1);
-        Schedule schedule = new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date);
+        DateTime date = new DateTime(1, 1, 1);
+        Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.AddScheduleDoctor(schedule))
-            .Returns(() => new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date));
+            .Returns(() => new Schedule(default, date, date));
         
         var res = _scheduleService.AddScheduleDoctor(schedule);
         var received = res.Error;
@@ -80,8 +79,8 @@ public class ScheduleUnitTest
     [Fact]
     public void EditScheduleDoctorWithEmptyNotFound_ShouldFail()
     {
-        var date = new DateOnly(1, 1, 1);
-        Schedule schedule = new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date);
+        DateTime date = new DateTime(1, 1, 1);
+        Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.EditScheduleDoctor(schedule))
             .Returns(() => null);
@@ -96,11 +95,11 @@ public class ScheduleUnitTest
     [Fact]
     public void EditScheduleDoctorSuccessfully_ShouldOk()
     {
-       var date = new DateOnly(1, 1, 1);
-       Schedule schedule = new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date);
+       DateTime date = new DateTime(1, 1, 1);
+       Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.EditScheduleDoctor(schedule))
-            .Returns(() => new Schedule(default, new DateTime(1, 1, 1), new DateTime(1, 1, 1), date));
+            .Returns(() => new Schedule(default, date, date));
 
         var res = _scheduleService.EditScheduleDoctor(schedule);
         var received = res.Error;

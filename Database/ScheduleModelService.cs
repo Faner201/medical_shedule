@@ -28,9 +28,9 @@ public class ScheduleModelService : IScheduleRepository
 
     public Schedule? AddScheduleDoctor(Schedule schedule)
     {
-        var schedules = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor);
+        var request = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor);
 
-        if (schedules is not null)
+        if (request is not null)
             return null;
 
         _db.Schedule.Add(new ScheduleModel
@@ -43,22 +43,22 @@ public class ScheduleModelService : IScheduleRepository
         _db.SaveChanges();
 
         return new Schedule(
-            schedules.IdDoctor,
-            schedules.Start,
-            schedules.End,
-            schedules.Date
+            request.IdDoctor,
+            request.Start,
+            request.End,
+            request.Date
         );
     }
 
     public Schedule? EditScheduleDoctor(Schedule schedule)
     {
-        var schedules = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor &&
+        var request = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor &&
         s.Date == schedule.Date && s.Start == schedule.Start && s.End == schedule.End);
-        if (schedule is not null)
+        if (request is not null)
         {
-            schedules.Start = schedule.Start;
-            schedules.End = schedule.End;
-            schedules.Date = schedule.Date;
+            request.Start = schedule.Start;
+            request.End = schedule.End;
+            request.Date = schedule.Date;
             _db.Schedule.Update(schedule);
             _db.SaveChanges();
         } else {
@@ -66,10 +66,10 @@ public class ScheduleModelService : IScheduleRepository
         }
 
         return new Schedule(
-            schedules.IdDoctor,
-            schedules.Start,
-            schedules.End,
-            schedules.Date
+            request.IdDoctor,
+            request.Start,
+            request.End,
+            request.Date
         );
     }
 }

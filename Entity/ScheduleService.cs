@@ -3,55 +3,27 @@ public class ScheduleService
 {
     private IScheduleRepository _scheduleService;
 
-    public ScheduleService(IScheduleRepository scheduleSerive)
+    public ScheduleService(IScheduleRepository scheduleService)
     {
-        _scheduleService = scheduleSerive;
+        _scheduleService = scheduleService;
     }
 
-    public Result<Schedule> RecordCreation(Schedule schedule)
+    public Result<Schedule> GetDoctorScheduleByDate(int doctorID, DateTime date)
     {
-        if (schedule.SpecializationDoctor.Name == string.Empty) 
-        {
-            return Result.Fail<Schedule>("There is no specialization");
-        }
+        var request = _scheduleService.GetDoctorScheduleByDate(doctorID, date);
 
-        if (_scheduleService.RecordExists(schedule))
-        {
-            return Result.Fail<Schedule>("There is already an appointment with this doctor for the selected date");
-        }
-
-        var request = _scheduleService.RecordCreation(schedule);
-
-        return request is not null ? Result.Ok<Schedule>(request) : Result.Fail<Schedule>("Failed to create appointment");
+        return request is null ? Result.Fail<Schedule>("The schedule for this doctor was not found ") : Result.Ok<Schedule>(request);
     }
-
-    public Result<List<(DateTime, DateTime)>> GetAllFreeDates(Specialization specialization, DateOnly date)
+    public Result<Schedule> AddScheduleDoctor(Schedule schedule)
     {
-        if (string.IsNullOrEmpty(specialization.Name))
-            return Result.Fail<List<(DateTime, DateTime)>>("There is no specialization");
+        var request = _scheduleService.AddScheduleDoctor(schedule);
 
-        var busyDates = _scheduleService.GetAllDates(specialization, date);
-
-        DateTime startTime = date.ToDateTime(new TimeOnly(0, 0, 0));
-        DateTime endTime = date.ToDateTime(new TimeOnly(23, 59, 59));
-
-        var allFreeDates = new List<(DateTime, DateTime)>();
-        var lastDate = (startTime, startTime);
-
-        if (busyDates.Count == 0)
-            return Result.Ok(new List<(DateTime, DateTime)>{(startTime, endTime)});
-        
-        foreach (var currentDate in busyDates)
-        {
-            allFreeDates.Add((lastDate.Item2, currentDate.Item1));
-            lastDate = currentDate;
-        }
-
-        if (busyDates.Last().Item2 != endTime)
-            allFreeDates.Add((busyDates.Last().Item2, endTime));
-
-        return Result.Ok<List<(DateTime, DateTime)>>(allFreeDates);
-            
+        return request is null ? Result.Fail<Schedule>("I couldn't add the schedule") : Result.Ok<Schedule>(request);
     }
+    public Result<Schedule> EditScheduleDoctor(Schedule schedule)
+    {
+        var request = _scheduleService.EditScheduleDoctor(schedule);
 
+        return request is null ? Result.Fail<Schedule>("It was not possible to add changes to the schedule") : Result.Ok<Schedule>(request);
+    }
 }

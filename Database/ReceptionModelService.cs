@@ -11,43 +11,49 @@ public class ReceptionModelService : IReceptionRepository
         _db = db;
     }
 
-    public Reception? SaveDoctorAppointment(Reception reception)
+    public Reception? RecordCreation(Reception reception)
     {
-        var receptions = _db.Reception.FirstOrDefault(r => r.IdDoctor == reception.IdDoctor &&
-        r.IdUser == reception.IdUser && r.Begin == reception.Begin && r.End == reception.End);
+        var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
+            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End);
 
-        if (receptions is null)
+        if (request is not null)
             return null;
-        
-        _db.Reception.Add(
-            new ReceptionModel{
-                Begin = receptions.Begin,
-                End = receptions.End,
+
+        _db.Reception.Add(new ReceptionModel
+            { 
+                IdDoctor = reception.IdDoctor,
                 IdUser = reception.IdUser,
-                IdDoctor = reception.IdDoctor
+                Start = reception.Start,
+                End = reception.End
             }
         );
-
         _db.SaveChanges();
 
         return new Reception(
-            receptions.Begin,
-            receptions.End,
-            receptions.IdUser,
-            receptions.IdDoctor
+            request.IdDoctor,
+            request.IdUser,
+            request.Start,
+            request.End
         );
     }
 
-    public Reception? SaveAnyFreeDoctorAppointment(DateTime date)
+    public bool RecordExists(Reception reception)
     {
-        //та же самая проблема, что и вверху
+        var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
+            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End);
+
+        if (request is null)
+            return false;
+
+        return true;
     }
 
-    public List<DateTime> GetFreeAppointmentDateList(Specialization specialization)
+    public List<(DateTime, DateTime)> GetAllDates(Specialization specialization, DateOnly date)
     {
-        var requestSpec = _db.Doctor.Where(u => u.Specialization == specialization);
-        var requestRec = _db.Reception.Where(u => u.IdDoctor == requestSpec.IdDoctor);
-
-        return new List<DateTime> {requestRec.Start, requestRec.End};
+        var dateTime = date.ToDateTime(new TimeOnly(0, 0, 0));
+        return _db.Reception
+            .Where(rp => rp.Specialization.Name = specialization.Name && rp.Start.Date == dateTime)
+            .Select(rp => new Tuple<DateTime, DateTime>(rp.Start, rp.End).ToValueTuple())
+            .OrderBy(rp => rp.Item2).ToList();
     }
 }

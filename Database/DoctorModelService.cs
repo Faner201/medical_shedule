@@ -13,9 +13,9 @@ public class DoctorModelService : IDoctorRepository
 
     public Doctor? CreateNewDoctor(Doctor doctor)
     {
-        var doctor = _db.Doctor.FirstOrDefault(d => d.Name == doctor.Name && d.Specialization == doctor.Specialization);
+        var request = _db.Doctor.FirstOrDefault(d => d.Name == doctor.Name && d.Specialization == doctor.Specialization);
 
-        if (doctor is null)
+        if (request is null)
             return null;
 
         _db.Doctor.Add(new DoctorModel 
@@ -28,9 +28,9 @@ public class DoctorModelService : IDoctorRepository
         _db.SaveChanges();
 
         return new Doctor(
-            doctor.Id,
-            doctor.Name,
-            doctor.Specialization
+            request.Id,
+            request.Name,
+            request.Specialization
         );
     }
 

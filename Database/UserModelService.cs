@@ -1,6 +1,6 @@
-namespace Database;
-
 using Entity;
+
+namespace Database;
 
 public class UserModelService : IUserRepository
 {

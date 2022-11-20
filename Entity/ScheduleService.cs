@@ -20,9 +20,9 @@ public class ScheduleService
 
         return request is null ? Result.Fail<Schedule>("I couldn't add the schedule") : Result.Ok<Schedule>(request);
     }
-    public Result<Schedule> EditScheduleDoctor(Schedule schedule)
+    public Result<Schedule> EditScheduleDoctor(Schedule actual, Schedule recent)
     {
-        var request = _scheduleService.EditScheduleDoctor(schedule);
+        var request = _scheduleService.EditScheduleDoctor(actual, recent);
 
         return request is null ? Result.Fail<Schedule>("It was not possible to add changes to the schedule") : Result.Ok<Schedule>(request);
     }

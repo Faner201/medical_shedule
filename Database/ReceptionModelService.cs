@@ -1,6 +1,6 @@
-namespace Database;
-
 using Entity;
+
+namespace Database;
 
 public class ReceptionModelService : IReceptionRepository
 {
@@ -14,7 +14,8 @@ public class ReceptionModelService : IReceptionRepository
     public Reception? RecordCreation(Reception reception)
     {
         var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
-            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End);
+            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End &&
+            rp.SpecializationDoctor.Id == reception.SpecializationDoctor.Id && reception.SpecializationDoctor.Name == reception.SpecializationDoctor.Name);
 
         if (request is not null)
             return null;
@@ -24,7 +25,8 @@ public class ReceptionModelService : IReceptionRepository
                 IdDoctor = reception.IdDoctor,
                 IdUser = reception.IdUser,
                 Start = reception.Start,
-                End = reception.End
+                End = reception.End,
+                SpecializationDoctor = new Specialization(reception.SpecializationDoctor.Id, reception.SpecializationDoctor.Name)
             }
         );
         _db.SaveChanges();
@@ -33,14 +35,17 @@ public class ReceptionModelService : IReceptionRepository
             request.IdDoctor,
             request.IdUser,
             request.Start,
-            request.End
+            request.End,
+            reception.SpecializationDoctor.Id,
+            reception.SpecializationDoctor.Name
         );
     }
 
     public bool RecordExists(Reception reception)
     {
         var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
-            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End);
+            rp.IdUser == reception.IdUser && rp.Start == reception.Start && rp.End == reception.End &&
+            rp.SpecializationDoctor.Id == reception.SpecializationDoctor.Id && reception.SpecializationDoctor.Name == reception.SpecializationDoctor.Name);
 
         if (request is null)
             return false;

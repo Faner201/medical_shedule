@@ -1,3 +1,4 @@
+namespace Entity;
 public interface IUserRepository : IRepository<User>
 {
     bool UserCheck(string login);

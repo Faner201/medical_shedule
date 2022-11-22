@@ -1,3 +1,4 @@
+namespace Entity;
 public class Doctor {
     private int _id;
     private string _name;

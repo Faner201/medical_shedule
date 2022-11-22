@@ -1,10 +1,11 @@
+namespace Entity;
 public class UserService 
 {
-    private  IUserRepository _db;
+    private  IUserRepository _userService;
 
-    public UserService(IUserRepository db)
+    public UserService(IUserRepository userService)
     {
-        _db = db;
+        _userService = userService;
     }
     public  Result<User> CreateNewUser(User user)
     {
@@ -14,10 +15,10 @@ public class UserService
         if(string.IsNullOrEmpty(user.Password))
             return Result.Fail<User>("Password reading error");
 
-        if(_db.GetUserByLogin(user.Login) is not null)
+        if(_userService.GetUserByLogin(user.Login) is not null)
             return Result.Fail<User>("This login is already occupied");
 
-        var isCreate = _db.CreateNewUser(user);
+        var isCreate = _userService.CreateNewUser(user);
 
         return isCreate is not null ? Result.Ok<User>(user) : Result.Fail<User>("User not created");
     }
@@ -27,7 +28,7 @@ public class UserService
         if(string.IsNullOrEmpty(login))
             return Result.Fail<bool>("Login reading error");
             
-        bool request = _db.UserCheck(login);
+        bool request = _userService.UserCheck(login);
 
         return request ? Result.Ok<bool>(request) : Result.Fail<bool>("User not found");
     }
@@ -37,7 +38,7 @@ public class UserService
         if(string.IsNullOrEmpty(login))
             return Result.Fail<User>("Login reading error");
 
-        User? request = _db.GetUserByLogin(login);
+        User? request = _userService.GetUserByLogin(login);
 
         return request is null ? Result.Fail<User>("User not found") : Result.Ok<User>(request);
     }

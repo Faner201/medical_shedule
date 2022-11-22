@@ -1,4 +1,7 @@
 using Xunit;
+using Entity;
+
+namespace XUnit;
 
 public class DoctorUnitTest
 {

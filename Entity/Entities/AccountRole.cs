@@ -1,3 +1,4 @@
+namespace Entity;
 public class AccountRole
 {
     private int _id;

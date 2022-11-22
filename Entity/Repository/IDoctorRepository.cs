@@ -1,3 +1,4 @@
+namespace Entity;
 public interface IDoctorRepository : IRepository<Doctor>
 {
     Doctor? CreateNewDoctor(Doctor doctor);

@@ -1,5 +1,5 @@
 namespace Entity;
-public interface IDoctorRepository : IRepository<Doctor>
+public interface IDoctorRepository 
 {
     Doctor? CreateNewDoctor(Doctor doctor);
     bool DeleteDoctor(int doctorID);

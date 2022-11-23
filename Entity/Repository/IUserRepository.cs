@@ -1,5 +1,5 @@
 namespace Entity;
-public interface IUserRepository : IRepository<User>
+public interface IUserRepository
 {
     bool UserCheck(string login);
 

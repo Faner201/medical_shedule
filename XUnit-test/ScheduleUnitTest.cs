@@ -16,7 +16,7 @@ public class ScheduleUnitTest
     public void GetDoctorScheduleByDateWithEmptyNotFound_ShouldFail()
     {
         int doctorID = 4324;
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
 
         _scheduleRepositoryMock.Setup(repository => repository.GetDoctorScheduleByDate(doctorID, date))
             .Returns(() => null);
@@ -32,9 +32,9 @@ public class ScheduleUnitTest
     public void GetDoctorScheduleByDateSuccessfully_ShouldOk()
     {
         int doctorID = 4234;
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
-        var start = new DateTime(1, 1, 1, 1, 1);
-        var end = new DateTime(1, 1, 1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
+        var start = new DateTime(1, 1, 1, 1, 1, 1);
+        var end = new DateTime(1, 1, 1, 1, 1, 1);
 
         _scheduleRepositoryMock.Setup(repository => repository.GetDoctorScheduleByDate(doctorID, date))
             .Returns(() => new Schedule(doctorID, start, end));
@@ -49,7 +49,7 @@ public class ScheduleUnitTest
     [Fact]
     public void AddScheduleDoctorWithEmptyNotFound_ShouldFail()
     {
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
         Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.AddScheduleDoctor(schedule))
@@ -65,7 +65,7 @@ public class ScheduleUnitTest
     [Fact]
     public void AddScheduleDoctorSuccessfully_ShouldOk()
     {
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
         Schedule schedule = new Schedule(default, date, date);
 
         _scheduleRepositoryMock.Setup(repository => repository.AddScheduleDoctor(schedule))
@@ -81,8 +81,8 @@ public class ScheduleUnitTest
     [Fact]
     public void EditScheduleDoctorWithEmptyNotFound_ShouldFail()
     {
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
-        DateTime dateEdit = new DateTime(2, 2, 2, 2, 2);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime dateEdit = new DateTime(2, 2, 2, 2, 2, 2);
         Schedule actual = new Schedule(default, date, date);
         Schedule recent = new Schedule(default, dateEdit, dateEdit);
 
@@ -99,8 +99,8 @@ public class ScheduleUnitTest
     [Fact]
     public void EditScheduleDoctorSuccessfully_ShouldOk()
     {
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
-        DateTime dateEdit = new DateTime(2, 2, 2, 2, 2);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime dateEdit = new DateTime(2, 2, 2, 2, 2, 2);
         Schedule actual = new Schedule(default, date, date);
         Schedule recent = new Schedule(default, dateEdit, dateEdit);
 

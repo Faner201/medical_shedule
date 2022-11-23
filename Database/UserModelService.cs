@@ -22,7 +22,9 @@ public class UserModelService : IUserRepository
             new UserModel{
                 PhoneNumber = user.PhoneNumber,
                 Name = user.Name,
-                Role = user.Role,
+                Role = new AccountRoleModel(){
+                    AccountRoleId = user.Role.RoleId
+                },
                 Password = user.Password,
                 Login = user.Login
             }
@@ -34,7 +36,7 @@ public class UserModelService : IUserRepository
             request.Id,
             request.PhoneNumber,
             request.Name,
-            request.Role,
+            new AccountRole(request.Role.AccountRoleId),
             request.Password,
             request.Login
         );
@@ -61,7 +63,7 @@ public class UserModelService : IUserRepository
             user.Id,
             user.PhoneNumber,
             user.Name,
-            user.Role,
+            new AccountRole(user.Role.AccountRoleId),
             user.Password,
             user.Login
         );

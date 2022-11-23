@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace Database;
 
@@ -18,21 +17,16 @@ public class ApplicationContext : DbContext
 
     public DbSet<AccountRoleModel> AccountRole {get; set; }
 
-    private string ConfigurationJSON()
-    {
-        var builder = new ConfigurationBuilder();
-        builder.SetBasePath(Directory.GetCurrentDirectory());
-        builder.AddJsonFile("appsetings.json");
-
-        var config = builder.Build();
-
-        string connectionString = config.GetConnectionString("DefaultConnection");
-        
-        return connectionString;
-    } 
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) {}
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
-        optionsBuilder.UseNpgsql(ConfigurationJSON()).Options;
+        IConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.SetBasePath(Directory.GetCurrentDirectory());
+        builder.AddJsonFile("appsetings.json");
+        IConfigurationRoot config = builder.Build();
+
+        string connection = config.GetConnectionString("DefaultConnection");
+        optionsBuilder.UseNpgsql(connection);
     }
 }

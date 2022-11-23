@@ -7,7 +7,7 @@ public class ReceptionModel
     [Required]
     public DateTime Begin { get; set; }
     public DateTime End { get; set; }
-    public UserModel IdUser { get; set; }
-    public DoctorModel IdDoctor { get; set; }
-    public Specialization SpecializationDoctor { get; set; }
+    public int IdUser { get; set; }
+    public int IdDoctor { get; set; }
+    public SpecializationModel SpecializationDoctor { get; set; }
 }

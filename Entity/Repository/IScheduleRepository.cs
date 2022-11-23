@@ -1,5 +1,5 @@
 namespace Entity;
-public interface IScheduleRepository : IRepository<Schedule>
+public interface IScheduleRepository
 {
    Schedule? GetDoctorScheduleByDate(int doctorID, DateTime date);
    Schedule? AddScheduleDoctor(Schedule schedule);

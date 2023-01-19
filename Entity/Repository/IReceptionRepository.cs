@@ -1,5 +1,5 @@
 namespace Entity;
-public interface IReceptionRepository : IRepository<Reception>
+public interface IReceptionRepository
 {
     Reception? RecordCreation(Reception reception);
     bool RecordExists(Reception reception);

@@ -13,7 +13,7 @@ public class ScheduleModelService : IScheduleRepository
 
     public Schedule? GetDoctorScheduleByDate(int doctorID, DateTime date)
     {
-        var schedule = _db.Schedule.Where(s => s.IdDoctor == doctorID && s.Date == date);
+        var schedule = _db.Schedule.FirstOrDefault(s => s.IdDoctor == doctorID && s.Start == date && s.End == date);
 
         if (schedule is null)
             return null;
@@ -58,7 +58,7 @@ public class ScheduleModelService : IScheduleRepository
             request.IdDoctor = recent.IdDoctor;
             request.Start = recent.Start;
             request.End = recent.End;
-            _db.Schedule.Update(schedule);
+            _db.Schedule.Update(request);
             _db.SaveChanges();
         } else {
             return null;

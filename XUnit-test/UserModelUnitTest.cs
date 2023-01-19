@@ -26,9 +26,11 @@ public class UserModelUnitTest
         string phoneNumber = "89424278860";
         string login = "Abobick";
         string password = "fsdfwerw";
-        AccountRoleModel role = new AccountRoleModel(5);
+        AccountRoleModel role = new AccountRoleModel(){
+            AccountRoleId = 5
+        };
 
-        var user = new User(1, phoneNumber, name, role, password, login);
+        var user = new User(1, phoneNumber, name, new AccountRole(role.AccountRoleId), password, login);
 
         var res = _userRepository.CreateNewUser(user);
 
@@ -48,7 +50,7 @@ public class UserModelUnitTest
 
         var res = _userRepository.UserCheck(login);
 
-        Assert.True(res.Success);
+        Assert.True(res);
     }
 
     [Fact]
@@ -58,9 +60,11 @@ public class UserModelUnitTest
         string phoneNumber = "89424278860";
         string login = "Abobick";
         string password = "fsdfwerw";
-        AccountRoleModel role = new AccountRoleModel(5);
+        AccountRoleModel role = new AccountRoleModel(){
+            AccountRoleId = 5
+        };
 
-        var user = new User(1, phoneNumber, name, role, password, login);
+        var user = new User(1, phoneNumber, name, new AccountRole(role.AccountRoleId), password, login);
 
         var res = _userRepository.GetUserByLogin(login);
 

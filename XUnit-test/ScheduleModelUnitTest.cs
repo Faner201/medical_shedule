@@ -8,7 +8,7 @@ public class ScheduleModelUnitTest
     private readonly DbContextOptionsBuilder<ApplicationContext> _optionsBuilder;
     private readonly IScheduleRepository _scheduleRepository;
 
-    public ScheduleModel()
+    public ScheduleModelUnitTest()
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
         optionsBuilder.UseNpgsql(
@@ -22,8 +22,8 @@ public class ScheduleModelUnitTest
     [Fact]
     public void AddScheduleDoctor()
     {
-        DateTime start = new DateTime(1, 1, 1, 1, 1);
-        DateTime end = new DateTime(1, 1, 1, 1, 1);
+        DateTime start = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime end = new DateTime(1, 1, 1, 1, 1, 1);
         int doctorId = 1;
 
         var schedule = new Schedule(doctorId, start, end);
@@ -39,9 +39,9 @@ public class ScheduleModelUnitTest
     [Fact]
     public void GetDoctorScheduleByDate()
     {
-        DateTime date = new DateTime(1, 1, 1, 1, 1);
-        DateTime start = new DateTime(1, 1, 1, 1, 1);
-        DateTime end = new DateTime(1, 1, 1, 1, 1);
+        DateTime date = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime start = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime end = new DateTime(1, 1, 1, 1, 1, 1);
         int doctorId = 1;
 
         var schedule = new Schedule(doctorId, start, end);
@@ -57,14 +57,14 @@ public class ScheduleModelUnitTest
     [Fact]
     public void EditScheduleDoctor()
     {
-        DateTime start = new DateTime(1, 1, 1, 1, 1);
-        DateTime end = new DateTime(1, 1, 1, 1, 1);
+        DateTime start = new DateTime(1, 1, 1, 1, 1, 1);
+        DateTime end = new DateTime(1, 1, 1, 1, 1, 1);
         int doctorId = 1;
 
         var actual = new Schedule(doctorId, start, end);
 
-        DateTime startEdit = new DateTime(2, 2, 2, 2, 2);
-        DateTime endEdit = new DateTime(2, 2, 2, 2, 2);
+        DateTime startEdit = new DateTime(2, 2, 2, 2, 2, 2);
+        DateTime endEdit = new DateTime(2, 2, 2, 2, 2, 2);
 
         var recent = new Schedule(doctorId, startEdit, endEdit);
 

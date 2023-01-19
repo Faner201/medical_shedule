@@ -24,8 +24,8 @@ public class ReceptionModelUnitTest
     {
        int doctorId = 1;
        int userId = 1;
-       var start = new DateTime(1, 1, 1, 1, 1);
-       var end = new DateTime(1, 1, 1, 2, 2);
+       var start = new DateTime(1,1,1,1,1,1);
+       var end = new DateTime(1, 1, 1, 1, 2, 2);
        int specializationId = 1;
        string specializationName = "aboba";
        Specialization specialization = new Specialization(specializationId, specializationName);
@@ -34,7 +34,7 @@ public class ReceptionModelUnitTest
 
        var res = _receptionRepository.RecordCreation(record);
 
-       Assert.True(result is not null);
+       Assert.True(record is not null);
        Assert.Equal(record.IdDoctor, res.IdDoctor);
        Assert.Equal(record.IdUser, res.IdUser);
        Assert.Equal(record.Start, res.Start);
@@ -48,8 +48,8 @@ public class ReceptionModelUnitTest
     {
         int doctorId = 1;
         int userId = 1;
-        var start = new DateTime(1, 1, 1, 1, 1);
-        var end = new DateTime(1, 1, 1, 2, 2);
+        var start = new DateTime(1, 1, 1, 1, 1, 1);
+        var end = new DateTime(1, 1, 1, 1, 2, 2);
         int specializationId = 1;
         string specializationName = "aboba";
         Specialization specialization = new Specialization(specializationId, specializationName);
@@ -58,6 +58,6 @@ public class ReceptionModelUnitTest
 
         var res = _receptionRepository.RecordExists(record);
 
-        Assert.True(res.Success);
+        Assert.True(res);
     }
 }

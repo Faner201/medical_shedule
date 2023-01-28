@@ -17,9 +17,9 @@ public class ReceptionController: ControllerBase
     }
 
     [HttpPost("createReception")]
-    public ActionResult<ReceptionView> RecordCreation(Reception reception)
+    async public Task<ActionResult<ReceptionView>> RecordCreation(Reception reception)
     {
-        var result = _service.RecordCreation(reception);
+        var result = await _service.RecordCreation(reception);
 
         if (result.Success)
         {
@@ -30,9 +30,9 @@ public class ReceptionController: ControllerBase
     }
 
     [HttpGet("getFreeDates")]
-    public ActionResult<List<(DateTime, DateTime)>> GetAllDates(Specialization specialization, DateOnly date)
+    async public Task<ActionResult<List<(DateTime, DateTime)>>> GetAllDates(Specialization specialization, DateOnly date)
     {
-        var result = _service.GetAllDates(specialization, date);
+        var result = await _service.GetAllDates(specialization, date);
 
         if (result.Success)
         {

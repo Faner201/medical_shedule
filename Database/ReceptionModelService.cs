@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Entity;
 
 namespace Database;
@@ -11,16 +12,16 @@ public class ReceptionModelService : IReceptionRepository
         _db = db;
     }
 
-    public Reception? RecordCreation(Reception reception)
+    async public Task<Reception?> RecordCreation(Reception reception)
     {
-        var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
+        var request = await _db.Reception.FirstOrDefaultAsync(rp => rp.IdDoctor == reception.IdDoctor &&
             rp.IdUser == reception.IdUser && rp.Begin == reception.Start && rp.End == reception.End &&
             rp.SpecializationDoctor.Id == reception.SpecializationDoctor.Id && reception.SpecializationDoctor.Name == reception.SpecializationDoctor.Name);
 
         if (request is not null)
             return null;
 
-        _db.Reception.Add(new ReceptionModel
+        await _db.Reception.AddAsync(new ReceptionModel
             { 
                 IdDoctor = reception.IdDoctor,
                 IdUser = reception.IdUser,
@@ -31,7 +32,7 @@ public class ReceptionModelService : IReceptionRepository
                 }
             }
         );
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return new Reception(
             request.IdDoctor,
@@ -42,9 +43,9 @@ public class ReceptionModelService : IReceptionRepository
         );
     }
 
-    public bool RecordExists(Reception reception)
+    async public Task<bool> RecordExists(Reception reception)
     {
-        var request = _db.Reception.FirstOrDefault(rp => rp.IdDoctor == reception.IdDoctor &&
+        var request = await _db.Reception.FirstOrDefaultAsync(rp => rp.IdDoctor == reception.IdDoctor &&
             rp.IdUser == reception.IdUser && rp.Begin == reception.Start && rp.End == reception.End &&
             rp.SpecializationDoctor.Id == reception.SpecializationDoctor.Id && reception.SpecializationDoctor.Name == reception.SpecializationDoctor.Name);
 
@@ -54,12 +55,12 @@ public class ReceptionModelService : IReceptionRepository
         return true;
     }
 
-    public List<(DateTime, DateTime)> GetAllDates(Specialization specialization, DateOnly date)
+    async public Task<List<(DateTime, DateTime)>> GetAllDates(Specialization specialization, DateOnly date)
     {
         var dateTime = date.ToDateTime(new TimeOnly(0, 0, 0));
-        return _db.Reception
+        return await _db.Reception
             .Where(rp => rp.SpecializationDoctor.Name == specialization.Name && rp.Begin.Date == dateTime)
             .Select(rp => new Tuple<DateTime, DateTime>(rp.Begin, rp.End).ToValueTuple())
-            .OrderBy(rp => rp.Item2).ToList();
+            .OrderBy(rp => rp.Item2).ToListAsync();
     }
 }

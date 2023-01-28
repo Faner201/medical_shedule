@@ -1,7 +1,7 @@
 namespace Entity;
 public interface IReceptionRepository
 {
-    Reception? RecordCreation(Reception reception);
-    bool RecordExists(Reception reception);
-    List<(DateTime, DateTime)> GetAllDates(Specialization specialization, DateOnly date);
+    Task<Reception?> RecordCreation(Reception reception);
+    Task<bool> RecordExists(Reception reception);
+    Task<List<(DateTime, DateTime)>> GetAllDates(Specialization specialization, DateOnly date);
 }

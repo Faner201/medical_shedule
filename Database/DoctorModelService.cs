@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Entity;
 
 namespace Database;
@@ -11,15 +12,15 @@ public class DoctorModelService : IDoctorRepository
         _db = db;
     }
 
-    public Doctor? CreateNewDoctor(Doctor doctor)
+    async public Task<Doctor?> CreateNewDoctor(Doctor doctor)
     {
-        var request = _db.Doctor.FirstOrDefault(d => d.Name == doctor.Name && d.Specialization.Id == doctor.Specialization.Id &&
+        var request = await _db.Doctor.FirstOrDefaultAsync(d => d.Name == doctor.Name && d.Specialization.Id == doctor.Specialization.Id &&
             d.Id == doctor.Id && d.Specialization.Name == doctor.Specialization.Name);
 
         if (request is null)
             return null;
 
-        _db.Doctor.Add(new DoctorModel 
+        await _db.Doctor.AddAsync(new DoctorModel 
             {
                 Name = doctor.Name,
                 Specialization =  new SpecializationModel(){
@@ -28,7 +29,7 @@ public class DoctorModelService : IDoctorRepository
             }
         );
 
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return new Doctor(
             request.Id,
@@ -37,24 +38,24 @@ public class DoctorModelService : IDoctorRepository
         );
     }
 
-    public bool DeleteDoctor(int doctorID)
+    async public Task<bool> DeleteDoctor(int doctorID)
     {
-        var request = _db.Doctor.FirstOrDefault(u => u.Id == doctorID);
+        var request = await _db.Doctor.FirstOrDefaultAsync(u => u.Id == doctorID);
 
         if (request != null)
         {
             _db.Doctor.Remove(request);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return true;
         }
         return false;
     }
 
-    public List<Doctor>? GetDoctorList()
+    async public Task<List<Doctor>?> GetDoctorList()
     {
-       var request = _db.Doctor
+        var request = await _db.Doctor
             .Select(d => new Doctor(d.Id, d.Name, new Specialization(d.Specialization.Id, d.Specialization.Name)))
-            .ToList();
+            .ToListAsync();
 
         if (request is null)
             return null;
@@ -62,9 +63,9 @@ public class DoctorModelService : IDoctorRepository
         return request;
     }
 
-    public Doctor? GetDoctor(int doctorID)
+    async public Task<Doctor?> GetDoctor(int doctorID)
     {
-        var doctor = _db.Doctor.FirstOrDefault(d => d.Id == doctorID);
+        var doctor = await _db.Doctor.FirstOrDefaultAsync(d => d.Id == doctorID);
 
         if (doctor is null)
             return null;
@@ -76,11 +77,11 @@ public class DoctorModelService : IDoctorRepository
         );
     }
 
-    public List<Doctor> GetDoctors(Specialization specialization)
+    async public Task<List<Doctor>> GetDoctors(Specialization specialization)
     {
-        return  _db.Doctor
+        return await _db.Doctor
             .Where(d => d.Specialization.Name == specialization.Name && d.Specialization.Id == specialization.Id)
             .Select(d => new Doctor(d.Id, d.Name, new Specialization(d.Specialization.Id, d.Specialization.Name)))
-            .ToList();
+            .ToListAsync();
     }
 }

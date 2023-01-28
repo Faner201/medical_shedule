@@ -1,9 +1,9 @@
 namespace Entity;
 public interface IDoctorRepository 
 {
-    Doctor? CreateNewDoctor(Doctor doctor);
-    bool DeleteDoctor(int doctorID);
-    List<Doctor>? GetDoctorList();
-    Doctor? GetDoctor(int doctorID);
-    List<Doctor>? GetDoctors(Specialization specialization);
+    Task<Doctor?> CreateNewDoctor(Doctor doctor);
+    Task<bool> DeleteDoctor(int doctorID);
+    Task<List<Doctor>?> GetDoctorList();
+    Task<Doctor?> GetDoctor(int doctorID);
+    Task<List<Doctor>?> GetDoctors(Specialization specialization);
 }

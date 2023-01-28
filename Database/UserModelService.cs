@@ -14,7 +14,6 @@ public class UserModelService : IUserRepository
     
     async public Task<User?> CreateNewUser(User user)
     {
-        await Task.Delay(0);
         var request = await _db.User.FirstOrDefaultAsync(u => u.Login == user.Login);
 
         if (request is not null)
@@ -46,7 +45,6 @@ public class UserModelService : IUserRepository
 
     async public Task<bool> UserCheck(string login) 
     {
-        await Task.Delay(20000);
         var user = await _db.User.FirstOrDefaultAsync(u => u.Login == login);
 
         if (user is null)
@@ -57,7 +55,6 @@ public class UserModelService : IUserRepository
 
     async public Task<User?> GetUserByLogin(string login)
     {
-        await Task.Delay(5000);
         var user = await _db.User.FirstOrDefaultAsync(u => u.Login == login);
 
         if (user is null)

@@ -17,9 +17,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("checkUser")]
-    public ActionResult UserCheck(string login)
+    async public Task<ActionResult> UserCheck(string login)
     {
-        var result = _service.UserCheck(login);
+        var result = await _service.UserCheck(login);
 
         if (result.Success)
         {
@@ -30,9 +30,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("getUser")]
-    public ActionResult<UserView> GetUserByLogin(string login)
+    async public Task<ActionResult<UserView>> GetUserByLogin(string login)
     {
-        var result = _service.GetUserByLogin(login);
+        var result = await _service.GetUserByLogin(login);
 
         if (result.Success)
         {
@@ -43,9 +43,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("createUser")]
-    public ActionResult<UserView> CreateNewUser(User user)
+    async public  Task<ActionResult<UserView>> CreateNewUser(User user)
     {
-        var result = _service.CreateNewUser(user);
+        var result = await _service.CreateNewUser(user);
 
         if (result.Success)
         {

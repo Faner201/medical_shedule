@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Entity;
 
 namespace Database;
@@ -11,9 +12,9 @@ public class ScheduleModelService : IScheduleRepository
         _db = db;
     }
 
-    public Schedule? GetDoctorScheduleByDate(int doctorID, DateTime date)
+    async public Task<Schedule?> GetDoctorScheduleByDate(int doctorID, DateTime date)
     {
-        var schedule = _db.Schedule.FirstOrDefault(s => s.IdDoctor == doctorID && s.Start == date && s.End == date);
+        var schedule = await _db.Schedule.FirstOrDefaultAsync(s => s.IdDoctor == doctorID && s.Start == date && s.End == date);
 
         if (schedule is null)
             return null;
@@ -25,22 +26,22 @@ public class ScheduleModelService : IScheduleRepository
         );
     }
 
-    public Schedule? AddScheduleDoctor(Schedule schedule)
+    async public Task<Schedule?> AddScheduleDoctor(Schedule schedule)
     {
-        var request = _db.Schedule.FirstOrDefault(s => s.IdDoctor == schedule.IdDoctor &&
+        var request = await _db.Schedule.FirstOrDefaultAsync(s => s.IdDoctor == schedule.IdDoctor &&
             s.Start == schedule.Start && s.End == schedule.End);
 
         if (request is not null)
             return null;
 
-        _db.Schedule.Add(new ScheduleModel
+        await _db.Schedule.AddAsync(new ScheduleModel
             {
                 IdDoctor = schedule.IdDoctor,
                 Start = schedule.Start,
                 End = schedule.End,
             }
         );
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return new Schedule(
             request.IdDoctor,
@@ -49,9 +50,9 @@ public class ScheduleModelService : IScheduleRepository
         );
     }
 
-    public Schedule? EditScheduleDoctor(Schedule actual, Schedule recent)
+    async public Task<Schedule?> EditScheduleDoctor(Schedule actual, Schedule recent)
     {
-        var request = _db.Schedule.FirstOrDefault(s => s.IdDoctor == actual.IdDoctor && 
+        var request = await _db.Schedule.FirstOrDefaultAsync(s => s.IdDoctor == actual.IdDoctor && 
             s.Start == actual.Start && s.End == actual.End);
         if (request is not null)
         {
@@ -59,7 +60,7 @@ public class ScheduleModelService : IScheduleRepository
             request.Start = recent.Start;
             request.End = recent.End;
             _db.Schedule.Update(request);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         } else {
             return null;
         }

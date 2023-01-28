@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Entity;
 
 namespace Database;
@@ -11,14 +12,14 @@ public class UserModelService : IUserRepository
         _db = db;
     }
     
-    public User? CreateNewUser(User user)
+    async public Task<User?> CreateNewUser(User user)
     {
-        var request = _db.User.FirstOrDefault(u => u.Login == user.Login);
+        var request = await _db.User.FirstOrDefaultAsync(u => u.Login == user.Login);
 
         if (request is not null)
             return null;
 
-        _db.User.Add(
+        await _db.User.AddAsync(
             new UserModel{
                 PhoneNumber = user.PhoneNumber,
                 Name = user.Name,
@@ -30,7 +31,7 @@ public class UserModelService : IUserRepository
             }
         );
 
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return new User(
             request.Id,
@@ -42,9 +43,9 @@ public class UserModelService : IUserRepository
         );
     }
 
-    public bool UserCheck(string login) 
+    async public Task<bool> UserCheck(string login) 
     {
-        var user = _db.User.FirstOrDefault(u => u.Login == login);
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Login == login);
 
         if (user is null)
             return true;
@@ -52,9 +53,9 @@ public class UserModelService : IUserRepository
             return false;
     }
 
-    public User? GetUserByLogin(string login)
+    async public Task<User?> GetUserByLogin(string login)
     {
-        var user = _db.User.FirstOrDefault(u => u.Login == login);
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Login == login);
 
         if (user is null)
             return null;

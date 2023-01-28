@@ -1,9 +1,9 @@
 namespace Entity;
 public interface IUserRepository
 {
-    bool UserCheck(string login);
+    Task<bool> UserCheck(string login);
 
-    User? GetUserByLogin(string login);
+    Task<User?> GetUserByLogin(string login);
 
-    User? CreateNewUser(User user);
+    Task<User?> CreateNewUser(User user);
 }

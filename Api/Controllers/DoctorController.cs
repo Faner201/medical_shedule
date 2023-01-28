@@ -17,9 +17,9 @@ public class DoctorController :  ControllerBase
     }
 
     [HttpPost("createDoctor")]
-    public ActionResult<DoctorView> CreateNewDoctor(Doctor doctor)
+    async public Task<ActionResult<DoctorView>> CreateNewDoctor(Doctor doctor)
     {
-        var result = _service.CreateNewDoctor(doctor);
+        var result = await _service.CreateNewDoctor(doctor);
         
         if (result.Success) {
             return Ok();
@@ -29,9 +29,9 @@ public class DoctorController :  ControllerBase
     }
 
     [HttpPost("deleteDoctor")]
-    public ActionResult DeleteDoctor(int doctorID)
+    async public Task<ActionResult> DeleteDoctor(int doctorID)
     {
-        var result = _service.DeleteDoctor(doctorID);
+        var result = await _service.DeleteDoctor(doctorID);
 
         if (result.Success)
         {
@@ -42,9 +42,9 @@ public class DoctorController :  ControllerBase
     }
 
     [HttpGet("getDoctorList")]
-    public ActionResult<List<DoctorView>> GetDoctorList()
+    async public Task<ActionResult<List<DoctorView>>> GetDoctorList()
     {
-        var result = _service.GetDoctorList();
+        var result = await _service.GetDoctorList();
 
         if (result.Success)
         {
@@ -55,9 +55,9 @@ public class DoctorController :  ControllerBase
     }
 
     [HttpGet("getDoctor")]
-    public ActionResult<DoctorView> GetDoctor(int doctorID)
+    async public Task<ActionResult<DoctorView>> GetDoctor(int doctorID)
     {
-        var result = _service.GetDoctor(doctorID);
+        var result = await _service.GetDoctor(doctorID);
 
         if (result.Success)
         {
@@ -68,9 +68,9 @@ public class DoctorController :  ControllerBase
     }
 
     [HttpGet("getDoctors")]
-    public ActionResult<List<DoctorView>> GetDoctors(Specialization specialization)
+    async public Task<ActionResult<List<DoctorView>>> GetDoctors(Specialization specialization)
     {
-        var result = _service.GetDoctors(specialization);
+        var result = await _service.GetDoctors(specialization);
 
         if (result.Success)
         {

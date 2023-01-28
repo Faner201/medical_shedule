@@ -2,11 +2,22 @@ namespace Entity;
 public class ReceptionService
 {
     private IReceptionRepository _receptionService;
-    private static SemaphoreSlim receptionSemaphore = new SemaphoreSlim(1, 1);
+    private static Dictionary<int, SemaphoreSlim> semaphoreByDoctor = new Dictionary<int, SemaphoreSlim>();
 
     public ReceptionService(IReceptionRepository receptionSerive)
     {
         _receptionService = receptionSerive;
+    }
+
+    private SemaphoreSlim GetOrCreate(IDictionary<int, SemaphoreSlim> dict, int key)
+    {
+        if (!dict.TryGetValue(key, out SemaphoreSlim? val))
+        {
+            val = new SemaphoreSlim(1, 1);
+            dict.Add(key, val);
+        }
+
+        return val;
     }
 
     async public Task<Result<Reception>> RecordCreation(Reception reception)
@@ -24,13 +35,14 @@ public class ReceptionService
         Reception? request = null;
         try
         {
-            await receptionSemaphore.WaitAsync();
+            await GetOrCreate(semaphoreByDoctor, reception.IdDoctor).WaitAsync();
 
             request = await _receptionService.RecordCreation(reception);
         }
         finally
         {
-            receptionSemaphore.Release();
+            semaphoreByDoctor[reception.IdDoctor].Release();
+            semaphoreByDoctor.Remove(reception.IdDoctor);
         }
 
         return request is not null ? Result.Ok<Reception>(request) : Result.Fail<Reception>("Failed to create appointment");
@@ -41,37 +53,33 @@ public class ReceptionService
         if (string.IsNullOrEmpty(specialization.Name))
             return Result.Fail<List<(DateTime, DateTime)>>("There is no specialization");
 
+        var request = _receptionService.GetAllDates(specialization, date);
+
+        var start = date.ToDateTime(new TimeOnly(0, 0, 0));
+        var end = date.ToDateTime(new TimeOnly(23, 59, 59));
+
         var freeDates = new List<(DateTime, DateTime)>();
-        try {
-            await receptionSemaphore.WaitAsync();
 
-            var result = _receptionService.GetAllDates(specialization, date);
+        var lastDate = (start, start);
 
-            var start = date.ToDateTime(new TimeOnly(0, 0, 0));
-            var end = date.ToDateTime(new TimeOnly(23, 59, 59));
+        var busyDates = await request;
 
-            var lastDate = (start, start);
-
-            var busyDates = await result;
-
-            if (busyDates.Count == 0) {
-                receptionSemaphore.Release();
-                return Result.Ok(new List<(DateTime, DateTime)>{(start, end)});
-            }
-            
-            foreach(var currentDate in busyDates)
-            {
-                freeDates.Add((lastDate.Item2, currentDate.Item1));
-                lastDate = currentDate;
-            }
-
-            if (busyDates.Last().Item2 != end) {
-                freeDates.Add((busyDates.Last().Item2, end));
-            }
+        if (busyDates.Count == 0)
+        {
+            return Result.Ok(new List<(DateTime, DateTime)>{(start, end)});
         }
-        finally {
-            receptionSemaphore.Release();
+
+        foreach(var currentDate in busyDates)
+        {
+            freeDates.Add((lastDate.Item2, currentDate.Item1));
+            lastDate = currentDate;
         }
+
+        if (busyDates.Last().Item2 != end)
+        {
+            freeDates.Add((busyDates.Last().Item2, end));
+        }
+
         return Result.Ok<List<(DateTime, DateTime)>>(freeDates);
     }
 }

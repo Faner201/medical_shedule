@@ -2,8 +2,6 @@ namespace Entity;
 public class UserService 
 {
     private  IUserRepository _userService;
-    private static SemaphoreSlim userSemaphore = new SemaphoreSlim(1, 1);
-
     public UserService(IUserRepository userService)
     {
         _userService = userService;
@@ -19,18 +17,7 @@ public class UserService
         if(_userService.GetUserByLogin(user.Login) is not null)
             return Result.Fail<User>("This login is already occupied");
 
-         User? isCreate = null;
-
-        try
-        {
-            await userSemaphore.WaitAsync();
-
-            isCreate = await _userService.CreateNewUser(user);
-        }
-        finally
-        {
-            userSemaphore.Release();
-        }
+        var isCreate = await _userService.CreateNewUser(user);
 
         return isCreate is not null ? Result.Ok<User>(user) : Result.Fail<User>("User not created");
     }
@@ -40,17 +27,7 @@ public class UserService
         if(string.IsNullOrEmpty(login))
             return Result.Fail<bool>("Login reading error");
             
-        Boolean request = false;
-
-        try {
-            await userSemaphore.WaitAsync();
-
-            request = await _userService.UserCheck(login);
-        }
-        finally
-        {
-            userSemaphore.Release();
-        }
+        var request = await _userService.UserCheck(login);
 
         return request ? Result.Ok<bool>(request) : Result.Fail<bool>("User not found");
     }
@@ -60,18 +37,7 @@ public class UserService
         if(string.IsNullOrEmpty(login))
             return Result.Fail<User>("Login reading error");
 
-        User? request = null;
-
-        try
-        {
-            await userSemaphore.WaitAsync();
-
-            request = await _userService.GetUserByLogin(login);
-        }
-        finally
-        {
-            userSemaphore.Release();
-        }
+        var request = await _userService.GetUserByLogin(login);
 
         return request is null ? Result.Fail<User>("User not found") : Result.Ok<User>(request);
     }
